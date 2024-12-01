@@ -1,7 +1,7 @@
 <p align="center"><b>МОНУ НТУУ КПІ ім. Ігоря Сікорського ФПМ СПіСКС</b></p>
 <p align="center">
 <b>Звіт з лабораторної роботи 2</b><br/>
-"Обробка списків з використанням базових функцій"<br/>
+"Рекурсія"<br/>
 дисципліни "Вступ до функціонального програмування"
 </p>
 <p align="right"> <b>Студент(-ка)</b>: <i>Гнатюк Софія Валентинівна КВ-12</i><p>
@@ -27,30 +27,69 @@ CL-USER> (list-set-symmetric-difference '(1 2 3 4) '(3 4 5 6))
 (1 2 5 6) ; порядок може відрізнятись
 ```
 
-## <Лістинг функції <назва першої функції>
+## <Лістинг функції <remove-seconds>
 ```lisp
-<Лістинг реалізації першої функції>
+(defun remove-seconds (lst &optional (index 1))
+  (cond
+    ((null lst) nil)
+    ((oddp index) (cons (car lst) (remove-seconds (cdr lst) (1+ index)))) 
+    (t (remove-seconds (cdr lst) (1+ index)))))
 ```
 ### Тестові набори та утиліти
 ```lisp
-<Лістинг реалізації утилітних тестових функцій та тестових наборів першої
-функції>
+(defun check-remove-seconds (name input expected)
+  (format t "~:[FAILED~;passed~]: ~a~%" 
+          (equal (remove-seconds input) expected) name))
+
+(defun test-remove-seconds ()
+  (check-remove-seconds "Test 1" '() '())              ; Expected: NIL
+  (check-remove-seconds "Test 2" '(1) '(1))            ; Expected: (1)
+  (check-remove-seconds "Test 3" '(1 2 3 4 5 6) '(1 3 5)) ; Expected: (1 3 5)
+  (check-remove-seconds "Test 4" '(1 2 a b 3 4 d) '(1 a 3 d))) ; Expected: (1 A 3 D)
 ```
 ### Тестування
 
 ```lisp
-<Виклик і результат виконання тестів першої функції>
+Running remove-seconds tests:
+passed: Test 1
+passed: Test 2
+passed: Test 3
+passed: Test 4
 ```
-## Лістинг функції <назва другої функції>
+## Лістинг функції <list-set-symmetric-difference>
 ```lisp
-<Лістинг реалізації другої функції>
+(defun list-set-symmetric-difference (set1 set2)
+  (let ((unique-in-set1 (remove-if (lambda (x) (member x set2 :test #'equal)) set1))
+        (unique-in-set2 (remove-if (lambda (x) (member x set1 :test #'equal)) set2)))
+    (append unique-in-set1 unique-in-set2)))
 ```
 ### Тестові набори та утиліти
 ```lisp
-<Лістинг реалізації утилітних тестових функцій та тестових наборів другої
-функції>
+(defun check-list-set-symmetric-difference (name set1 set2 expected)
+  (format t "~:[FAILED~;passed~]: ~a~%"
+          (equal (list-set-symmetric-difference set1 set2) expected) name))
+
+(defun test-list-set-symmetric-difference ()
+  (check-list-set-symmetric-difference "Test 1" '() '() '()) ; Expected: NIL
+  (check-list-set-symmetric-difference "Test 2" '(1 2 3) '() '(1 2 3)) ; Expected: (1 2 3)
+  (check-list-set-symmetric-difference "Test 3" '() '(4 5 6) '(4 5 6)) ; Expected: (4 5 6)
+  (check-list-set-symmetric-difference "Test 4" '(1 2 3) '(1 2 3) '()) ; Expected: NIL
+  (check-list-set-symmetric-difference "Test 5" '((1 2) 3 4) '(3 (1 2) 5) '(4 5))) ; Expected: (4 5)
+
+(defun run-all-tests ()
+  (format t "~%Running remove-seconds tests:~%")
+  (test-remove-seconds)
+  (format t "~%Running list-set-symmetric-difference tests:~%")
+  (test-list-set-symmetric-difference))
+
+(run-all-tests)
 ```
 ### Тестування
 ```lisp
-<Виклик і результат виконання тестів другої функції>
+Running list-set-symmetric-difference tests:
+passed: Test 1
+passed: Test 2
+passed: Test 3
+passed: Test 4
+passed: Test 5
 ```
