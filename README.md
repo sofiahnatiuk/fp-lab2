@@ -27,7 +27,7 @@ CL-USER> (list-set-symmetric-difference '(1 2 3 4) '(3 4 5 6))
 (1 2 5 6) ; порядок може відрізнятись
 ```
 
-## <Лістинг функції <remove-seconds>
+## Лістинг функції remove-seconds
 ```lisp
 (defun remove-seconds (lst &optional (index 1))
   (cond
@@ -56,7 +56,7 @@ passed: Test 2
 passed: Test 3
 passed: Test 4
 ```
-## Лістинг функції <list-set-symmetric-difference>
+## Лістинг функції list-set-symmetric-difference
 ```lisp
 (defun list-set-symmetric-difference (set1 set2)
   (let ((unique-in-set1 (remove-if (lambda (x) (member x set2 :test #'equal)) set1))
